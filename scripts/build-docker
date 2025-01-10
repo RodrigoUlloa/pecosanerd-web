@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+NAME=us-central1-docker.pkg.dev/tidy-landing-441816-j9/pecosa-web-images/web-server
+
+docker build -t $NAME --build-arg RESEND_API_KEY=$RESEND_API_KEY .
+
