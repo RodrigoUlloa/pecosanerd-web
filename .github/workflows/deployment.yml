@@ -7,7 +7,6 @@ on:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-    environment: production
     env:
       REGISTRY_NAME: ${{ vars.REGISTRY_NAME }}
       GCP_PROJECT: ${{ vars.GCP_PROJECT }}
