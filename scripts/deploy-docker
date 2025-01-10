@@ -11,4 +11,4 @@ URL=$(gcloud run deploy $SERVICE_NAME  \
             --service-account cloudrun-pecosa@tidy-landing-441816-j9.iam.gserviceaccount.com \
             --format='value(status.url)')
 
-echo $URL 
+echo "Esta es la url===$URL"
