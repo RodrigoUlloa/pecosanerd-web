@@ -26,19 +26,20 @@ jobs:
         uses: 'google-github-actions/setup-gcloud@v2'
 
       - name: 'Configure Docker'
-        run: gcloud auth configure-docker ${{ env.REGISTRY_NAME }}-docker.pkg.dev
+        run: gcloud auth configure-docker ${{ env.REGISTRY_NAME }}
 
       - name: 'Build and Push Container'
         run: |
           docker build \
-            --build-arg RESEND_API_KEY=${{ secrets.RESEND_API_KEY }} \
-            -t ${{ env.REGISTRY_NAME }}-docker.pkg.dev/${{ env.GCP_PROJECT }}/${{ env.SERVICE_NAME }}/pecosa-web:${{ github.sha }} .
-          docker push ${{ env.REGISTRY_NAME }}-docker.pkg.dev/${{ env.GCP_PROJECT }}/${{ env.SERVICE_NAME }}/pecosa-web:${{ github.sha }}
+            -t ${{ env.REGISTRY_NAME }}/${{ env.SERVICE_NAME }}/pecosa-web:${{ github.sha }} .
+          docker push ${{ env.REGISTRY_NAME }}/${{ env.SERVICE_NAME }}/pecosa-web:${{ github.sha }}
 
       - name: 'Deploy to Cloud Run'
         run: |
           gcloud run deploy ${{ env.SERVICE_NAME }} \
-            --image ${{ env.REGISTRY_NAME }}-docker.pkg.dev/${{ env.GCP_PROJECT }}/${{ env.SERVICE_NAME }}/pecosa-web:${{ github.sha }} \
+            --image ${{ env.REGISTRY_NAME }}/${{ env.SERVICE_NAME }}/pecosa-web:${{ github.sha }} \
             --region ${{ env.GCP_REGION }} \
             --platform managed \
-            --allow-unauthenticated
+            --allow-unauthenticated \
+            --update-secrets=RESEND_API_KEY=RESEND_API_KEY:latest \
+            --service-account cloudrun-pecosa@tidy-landing-441816-j9.iam.gserviceaccount.com
