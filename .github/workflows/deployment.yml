@@ -11,7 +11,7 @@ jobs:
       REGISTRY_NAME: ${{ vars.REGISTRY_NAME }}
       GCP_PROJECT: ${{ vars.GCP_PROJECT }}
       GCP_REGION: us-central1
-      SERVICE_NAME: pecosa-web
+      SERVICE_NAME: pecosa-server
     
     steps:
       - uses: actions/checkout@v4
@@ -19,23 +19,17 @@ jobs:
       - name: 'Authenticate to Google Cloud'
         uses: 'google-github-actions/auth@v2'
         with:
-          credentials_json: '${{ secrets.GCP_SA_KEY }}'
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
 
       - name: 'Configure Docker'
         run: gcloud auth configure-docker ${{ env.REGISTRY_NAME }}
 
       - name: 'Build and Push Container'
         run: |
-          docker build \
-            -t ${{ env.REGISTRY_NAME }}/${{ env.SERVICE_NAME }}:latest .
-          docker push ${{ env.REGISTRY_NAME }}/${{ env.SERVICE_NAME }}:latest
+          ./scripts/build-docker
+          ./scripts/push-docker
 
       - name: 'Deploy to Cloud Run'
         run: |
-          gcloud run deploy ${{ env.SERVICE_NAME }} \
-            --image ${{ env.REGISTRY_NAME }}/${{ env.SERVICE_NAME }}:latest \
-            --region ${{ env.GCP_REGION }} \
-            --platform managed \
-            --allow-unauthenticated \
-            --update-secrets=RESEND_API_KEY=RESEND_API_KEY:latest \
-            --service-account cloudrun-pecosa@tidy-landing-441816-j9.iam.gserviceaccount.com
+          ./scripts/deploy-docker
+          

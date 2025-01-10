@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
+
 TAG="$(git rev-parse --short HEAD)"
 NAME="$REGISTRY_NAME/$SERVICE_NAME:$TAG"
 
-echo $NAME
-docker build -t $NAME .
-
+docker push $NAME

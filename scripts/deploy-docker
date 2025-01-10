@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+TAG="$(git rev-parse --short HEAD)"
+IMAGENAME="$REGISTRY_NAME/$SERVICE_NAME:$TAG"
+
+URL=$(gcloud run deploy $SERVICE_NAME  \
+            --image $IMAGENAME \
+            --region $GCP_REGION \
+            --platform managed \
+            --allow-unauthenticated \
+            --update-secrets=RESEND_API_KEY=RESEND_API_KEY:latest \
+            --service-account cloudrun-pecosa@tidy-landing-441816-j9.iam.gserviceaccount.com \
+            --format='value(status.url)')
+
+echo $URL 
