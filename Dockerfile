@@ -17,10 +17,7 @@ RUN npm run build
 FROM node:20-alpine
 COPY --from=builder /app/dist dist
 
-# Create .env file from build args
-ARG RESEND_API_KEY
-RUN echo "RESEND_API_KEY=${RESEND_API_KEY}" > .env
 COPY . .
 ENV NODE_ENV=production
-RUN npm install
+RUN npm ci
 CMD ["npm", "start"]
