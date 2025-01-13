@@ -37,10 +37,6 @@ const ContactForm = () => {
     setFormData({ name: '', email: '', message: '' });
     setStatus({ loading: false, error: null });
     alert('!Mensaje enviado con éxito!');
-    // // send the form data 
-    // console.log('Form submitted:', formData);
-    // // reset form after submission
-    // setFormData({ name: '', email: '', message: '' });
     }  catch (error) {
       setStatus({ loading: false, error: error.message });
     }
